@@ -832,9 +832,9 @@ ul { list-style: none; }
   margin-bottom: 24px;
 }
 
-.director__quote em {
-  font-style: normal;
+.director__quote strong {
   color: var(--color-gold-dark);
+  font-weight: 700;
 }
 
 .director__intro {
@@ -845,7 +845,7 @@ ul { list-style: none; }
 
 .director__intro strong {
   color: var(--color-navy);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .director__intro-closing {
@@ -856,6 +856,10 @@ ul { list-style: none; }
   color: var(--color-navy);
   font-weight: 600;
   line-height: 1.75;
+}
+
+.director__intro-closing strong {
+  color: var(--color-gold-dark);
 }
 
 .director__tracks {
