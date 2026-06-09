@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 480 600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a2d4a"/>
+      <stop offset="100%" style="stop-color:#0f1a2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="600" fill="url(#bg)"/>
+  <circle cx="240" cy="220" r="80" fill="none" stroke="#c9a962" stroke-width="2" opacity="0.4"/>
+  <circle cx="240" cy="200" r="45" fill="#c9a962" opacity="0.15"/>
+  <path d="M140 420 Q240 340 340 420" fill="none" stroke="#c9a962" stroke-width="2" opacity="0.3"/>
+  <text x="240" y="480" text-anchor="middle" fill="#c9a962" font-family="sans-serif" font-size="14" font-weight="600" letter-spacing="2">DIRECTOR</text>
+  <text x="240" y="510" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="sans-serif" font-size="12">images/director.jpg</text>
+</svg>
