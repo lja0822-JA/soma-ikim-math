@@ -848,6 +848,16 @@ ul { list-style: none; }
   font-weight: 600;
 }
 
+.director__intro-closing {
+  display: block;
+  margin-top: 4px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-navy);
+  font-weight: 600;
+  line-height: 1.75;
+}
+
 .director__tracks {
   display: grid;
   grid-template-columns: 1fr 1fr;
