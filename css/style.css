@@ -390,11 +390,28 @@ ul { list-style: none; }
 }
 
 .hero__desc {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   font-size: clamp(1rem, 2.5vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
   margin-bottom: 40px;
-  max-width: 480px;
+  max-width: 520px;
+}
+
+.hero__desc-line {
+  display: block;
+}
+
+.hero__desc-line--accent {
+  margin-top: 6px;
+  padding-top: 14px;
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2.6vw, 1.28rem);
+  color: var(--color-gold-light);
+  border-top: 1px solid rgba(201, 169, 98, 0.35);
+  letter-spacing: -0.01em;
 }
 
 .hero__cta {
