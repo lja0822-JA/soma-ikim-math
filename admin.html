@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>상담 관리 | 소마 이김수학학원</title>
+  <link rel="icon" href="images/logo/ikim-emblem.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="admin-login" id="adminLogin">
+    <div class="admin-login__card">
+      <h1>상담 관리</h1>
+      <p>소마 이김수학학원 관리자 전용 페이지입니다.</p>
+      <form id="loginForm">
+        <label for="adminPassword">관리자 비밀번호</label>
+        <input type="password" id="adminPassword" autocomplete="current-password" required>
+        <p class="admin-login__error" id="loginError" hidden></p>
+        <button type="submit" class="admin-btn admin-btn--primary">로그인</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-app" id="adminApp" hidden>
+    <header class="admin-header">
+      <div class="admin-header__inner">
+        <div>
+          <h1>상담 관리</h1>
+          <p>학부모 상담 신청 내역</p>
+        </div>
+        <div class="admin-header__actions">
+          <span class="admin-badge" id="unreadBadge" hidden>새 상담 <strong id="unreadCount">0</strong>건</span>
+          <button type="button" class="admin-btn admin-btn--ghost" id="notifyBtn">알림 켜기</button>
+          <button type="button" class="admin-btn admin-btn--ghost" id="logoutBtn">로그아웃</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-alert" id="adminAlert" hidden role="alert">
+      <strong>🔔 새 상담 신청</strong>
+      <span id="adminAlertText">새로운 상담이 접수되었습니다.</span>
+      <button type="button" class="admin-alert__close" id="adminAlertClose" aria-label="닫기">×</button>
+    </div>
+
+    <main class="admin-main container">
+      <div class="admin-toolbar">
+        <div class="admin-tabs">
+          <button type="button" class="admin-tab is-active" data-filter="all">전체</button>
+          <button type="button" class="admin-tab" data-filter="unread">미확인</button>
+          <button type="button" class="admin-tab" data-filter="read">확인함</button>
+        </div>
+        <button type="button" class="admin-btn admin-btn--ghost" id="refreshBtn">새로고침</button>
+      </div>
+
+      <div class="admin-empty" id="adminEmpty" hidden>
+        <p>표시할 상담 내역이 없습니다.</p>
+      </div>
+
+      <div class="admin-list" id="adminList"></div>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

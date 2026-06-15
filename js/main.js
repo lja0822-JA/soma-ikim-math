@@ -318,4 +318,65 @@
 
   if (lightboxPrev) lightboxPrev.addEventListener('click', function () { navigateLightbox(-1); });
   if (lightboxNext) lightboxNext.addEventListener('click', function () { navigateLightbox(1); });
+
+  // Consult form — save to server
+  const consultForm = document.getElementById('consultForm');
+  const consultSubmitBtn = document.getElementById('consultSubmitBtn');
+  const consultFormNote = document.getElementById('consultFormNote');
+  const CONSULT_API = '/.netlify/functions/consult-submit';
+
+  function showConsultNote(text, isSuccess) {
+    if (!consultFormNote) return;
+    consultFormNote.textContent = text;
+    consultFormNote.classList.toggle('is-success', !!isSuccess);
+    consultFormNote.classList.toggle('is-error', !isSuccess);
+  }
+
+  async function submitConsultation(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('consultName').value.trim();
+    const grade = document.getElementById('consultGrade').value;
+    const phone = document.getElementById('consultPhone').value.trim();
+    const message = document.getElementById('consultMessage').value.trim();
+
+    if (!name || !phone) {
+      showConsultNote('학생 이름과 연락처를 입력해 주세요.', false);
+      return;
+    }
+
+    if (consultSubmitBtn) {
+      consultSubmitBtn.disabled = true;
+      consultSubmitBtn.textContent = '저장 중…';
+    }
+
+    try {
+      const res = await fetch(CONSULT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, grade: grade, phone: phone, message: message })
+      });
+
+      const data = await res.json().catch(function () { return {}; });
+
+      if (!res.ok) {
+        throw new Error(data.error || '저장에 실패했습니다.');
+      }
+
+      showConsultNote('상담 신청이 완료되었습니다. 학원에서 확인 후 연락드리겠습니다.', true);
+      consultForm.reset();
+      document.getElementById('consultGrade').value = '초등';
+    } catch (err) {
+      showConsultNote(err.message || '저장에 실패했습니다. 잠시 후 다시 시도해 주세요.', false);
+    } finally {
+      if (consultSubmitBtn) {
+        consultSubmitBtn.disabled = false;
+        consultSubmitBtn.textContent = '상담 신청하기';
+      }
+    }
+  }
+
+  if (consultForm) {
+    consultForm.addEventListener('submit', submitConsultation);
+  }
 })();

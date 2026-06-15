@@ -108,6 +108,20 @@ ul { list-style: none; }
   background: rgba(255, 255, 255, 0.1);
 }
 
+.btn--dark {
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+.btn--dark:hover {
+  background: var(--color-navy-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--block {
+  width: 100%;
+}
+
 /* ---- Header ---- */
 .header {
   position: fixed;
@@ -236,16 +250,16 @@ ul { list-style: none; }
 
 .brand-lockup__logo-slot {
   width: 100%;
-  height: 72px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .brand-lockup__caption {
   width: 100%;
-  max-width: 280px;
+  max-width: 300px;
 }
 
 .brand-lockup__caption strong {
@@ -265,10 +279,23 @@ ul { list-style: none; }
   line-height: 1.65;
 }
 
+.brand-lockup__hook {
+  display: block;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+  font-size: 13px;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--color-navy);
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+}
+
 .brand-lockup__soma {
-  height: 64px;
+  height: 68px;
   width: auto;
-  max-width: 140px;
+  max-width: 200px;
   object-fit: contain;
 }
 
@@ -1412,6 +1439,167 @@ ul { list-style: none; }
   color: var(--color-gold-dark);
 }
 
+/* ---- Consult ---- */
+.consult {
+  background: var(--color-cream);
+}
+
+.consult__required {
+  color: var(--color-gold-dark);
+  font-weight: 700;
+}
+
+.consult__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.consult__intro .section-title {
+  margin-bottom: 20px;
+}
+
+.consult__desc {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  margin-bottom: 32px;
+  max-width: 440px;
+}
+
+.consult__channels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.consult__channel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.consult__channel:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-sm);
+}
+
+.consult__channel-text strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 4px;
+}
+
+.consult__channel-text span {
+  display: block;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.consult__channel-link {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-gold-dark);
+}
+
+.consult__form-card {
+  padding: 32px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.consult__form-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 24px;
+}
+
+.consult__field {
+  margin-bottom: 16px;
+}
+
+.consult__field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+}
+
+.consult__field input,
+.consult__field select,
+.consult__field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition);
+}
+
+.consult__field input:focus,
+.consult__field select:focus,
+.consult__field textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.consult__field textarea {
+  resize: vertical;
+  min-height: 108px;
+}
+
+.consult__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.consult__actions .btn {
+  width: 100%;
+  padding: 14px 16px;
+}
+
+.consult__actions--single {
+  grid-template-columns: 1fr;
+}
+
+.consult__form-note.is-error {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.consult__form-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.consult__form-note.is-success {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
 /* ---- Modal ---- */
 .modal,
 .lightbox {
@@ -1762,6 +1950,7 @@ body.modal-open {
   .director__tracks { grid-template-columns: 1fr; }
   .director__values { grid-template-columns: 1fr; }
   .contact__info-bar { grid-template-columns: repeat(2, 1fr); }
+  .consult__grid { grid-template-columns: 1fr; gap: 40px; }
   .lightbox__nav--prev { left: 8px; }
   .lightbox__nav--next { right: 8px; }
 }
@@ -1810,8 +1999,9 @@ body.modal-open {
     padding: 28px 20px;
   }
   .brand-lockup__plus { display: none; }
-  .brand-lockup__logo-slot { height: 64px; margin-bottom: 12px; }
-  .brand-lockup__soma { height: 56px; }
+  .brand-lockup__logo-slot { height: 72px; margin-bottom: 12px; }
+  .brand-lockup__soma { height: 60px; max-width: 180px; }
+  .brand-lockup__hook { font-size: 12px; margin-top: 8px; padding-top: 8px; }
   .brand-lockup__ikim { height: 44px; }
   .brand-lockup__caption { max-width: none; }
 
@@ -1847,6 +2037,7 @@ body.modal-open {
   .testimonials__grid,
   .director__grid,
   .contact__campuses,
+  .consult__grid,
   .gallery__grid {
     grid-template-columns: 1fr;
   }

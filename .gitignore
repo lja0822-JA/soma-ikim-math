@@ -1,5 +1,7 @@
 .DS_Store
 Thumbs.db
+node_modules/
+package-lock.json
 *.zip
 소마-이김수학-완성본/
 링크-만들기.bat
