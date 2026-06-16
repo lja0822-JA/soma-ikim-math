@@ -134,6 +134,15 @@ body {
   font-size: 13px;
   color: var(--color-danger);
   margin-bottom: 12px;
+  padding: 10px 12px;
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.2);
+  border-radius: var(--radius-sm);
+  line-height: 1.5;
+}
+
+.admin-login__error[hidden] {
+  display: none !important;
 }
 
 .admin-login__card .admin-btn { width: 100%; padding: 14px; }

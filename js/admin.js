@@ -196,17 +196,37 @@
   loginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     loginError.hidden = true;
-    password = adminPasswordInput.value;
+    password = adminPasswordInput.value.trim();
+
+    if (!password) {
+      loginError.textContent = '비밀번호를 입력해 주세요.';
+      loginError.hidden = false;
+      return;
+    }
+
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '확인 중…';
+    }
 
     try {
-      await apiRequest('GET');
+      const data = await apiRequest('GET');
       sessionStorage.setItem(SESSION_KEY, password);
       adminPasswordInput.value = '';
       showApp();
+      if (data.warning) {
+        window.alert(data.warning);
+      }
     } catch (err) {
       password = '';
-      loginError.textContent = err.message;
+      loginError.textContent = err.message || '로그인에 실패했습니다. Netlify에 설정한 ADMIN_PASSWORD와 동일한지 확인해 주세요.';
       loginError.hidden = false;
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '로그인';
+      }
     }
   });
 

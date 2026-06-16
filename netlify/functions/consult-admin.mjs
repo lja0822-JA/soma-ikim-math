@@ -10,7 +10,8 @@ function getConsultStore() {
 function isAuthorized(req) {
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) return false;
-  return req.headers.get("x-admin-password") === adminPassword;
+  const provided = (req.headers.get("x-admin-password") || "").trim();
+  return provided === adminPassword.trim();
 }
 
 export default async (req) => {
@@ -25,7 +26,17 @@ export default async (req) => {
 
   try {
     if (req.method === "GET") {
-      const list = (await store.get(STORE_KEY, { type: "json" })) || [];
+      let list = [];
+      try {
+        list = (await store.get(STORE_KEY, { type: "json" })) || [];
+      } catch (blobErr) {
+        console.error("consult-admin blob read error:", blobErr);
+        return Response.json({
+          list: [],
+          unread: 0,
+          warning: "상담 데이터 저장소 연결에 문제가 있습니다. Netlify Blobs 설정을 확인해 주세요."
+        });
+      }
       const unread = list.filter((item) => !item.is_read).length;
       return Response.json({ list, unread });
     }
