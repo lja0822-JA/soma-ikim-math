@@ -141,7 +141,12 @@ body {
   line-height: 1.5;
 }
 
-.admin-login__error[hidden] {
+.admin-login__error[hidden],
+.admin-app[hidden],
+.admin-login[hidden],
+.admin-alert[hidden],
+.admin-empty[hidden],
+.admin-badge[hidden] {
   display: none !important;
 }
 

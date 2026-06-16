@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  const VERIFY_URL = '/.netlify/functions/consult-verify';
   const API_URL = '/.netlify/functions/consult-admin';
   const SESSION_KEY = 'soma_admin_password';
   const POLL_MS = 15000;
@@ -22,24 +23,37 @@
   const adminEmpty = document.getElementById('adminEmpty');
   const tabs = document.querySelectorAll('.admin-tab');
 
-  let password = sessionStorage.getItem(SESSION_KEY) || '';
+  let password = '';
   let consultations = [];
   let currentFilter = 'all';
   let lastUnread = 0;
   let pollTimer = null;
   let initialLoad = true;
 
-  function showLogin() {
-    loginEl.hidden = false;
-    appEl.hidden = true;
+  function showLogin(message) {
+    loginEl.removeAttribute('hidden');
+    appEl.setAttribute('hidden', '');
     stopPolling();
+    if (message) {
+      showLoginError(message);
+    }
   }
 
   function showApp() {
-    loginEl.hidden = true;
-    appEl.hidden = false;
+    loginEl.setAttribute('hidden', '');
+    appEl.removeAttribute('hidden');
     startPolling();
     loadConsultations();
+  }
+
+  function showLoginError(message) {
+    loginError.textContent = message;
+    loginError.removeAttribute('hidden');
+  }
+
+  function hideLoginError() {
+    loginError.textContent = '';
+    loginError.setAttribute('hidden', '');
   }
 
   function stopPolling() {
@@ -54,6 +68,26 @@
     pollTimer = setInterval(loadConsultations, POLL_MS);
   }
 
+  async function verifyPassword(pwd) {
+    const res = await fetch(VERIFY_URL, {
+      method: 'GET',
+      headers: { 'X-Admin-Password': pwd }
+    });
+
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (err) {
+      throw new Error('서버 응답을 읽을 수 없습니다. 잠시 후 다시 시도해 주세요.');
+    }
+
+    if (!res.ok) {
+      throw new Error(data.error || '로그인에 실패했습니다.');
+    }
+
+    return data;
+  }
+
   async function apiRequest(method, body) {
     const res = await fetch(API_URL, {
       method,
@@ -64,9 +98,12 @@
       body: body ? JSON.stringify(body) : undefined
     });
 
-    const data = await res.json().catch(function () {
-      return {};
-    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (err) {
+      throw new Error('서버 응답을 읽을 수 없습니다.');
+    }
 
     if (!res.ok) {
       throw new Error(data.error || '요청에 실패했습니다.');
@@ -110,11 +147,11 @@
     adminList.innerHTML = '';
 
     if (!filtered.length) {
-      adminEmpty.hidden = false;
+      adminEmpty.removeAttribute('hidden');
       return;
     }
 
-    adminEmpty.hidden = true;
+    adminEmpty.setAttribute('hidden', '');
 
     filtered.forEach(function (item) {
       const card = document.createElement('article');
@@ -143,7 +180,11 @@
 
   function updateUnreadUI(unread) {
     unreadCount.textContent = unread;
-    unreadBadge.hidden = unread === 0;
+    if (unread === 0) {
+      unreadBadge.setAttribute('hidden', '');
+    } else {
+      unreadBadge.removeAttribute('hidden');
+    }
 
     if (!initialLoad && unread > lastUnread) {
       showNewAlert(unread - lastUnread);
@@ -155,7 +196,7 @@
 
   function showNewAlert(count) {
     adminAlertText.textContent = '새로운 상담 ' + count + '건이 접수되었습니다.';
-    adminAlert.hidden = false;
+    adminAlert.removeAttribute('hidden');
 
     if (Notification.permission === 'granted') {
       new Notification('소마 이김수학 — 새 상담 신청', {
@@ -166,19 +207,28 @@
   }
 
   async function loadConsultations() {
+    if (!password) return;
+
     try {
       const data = await apiRequest('GET');
       consultations = data.list || [];
       updateUnreadUI(data.unread || 0);
       renderList();
+
+      if (data.warning) {
+        adminAlertText.textContent = data.warning;
+        adminAlert.removeAttribute('hidden');
+      }
     } catch (err) {
-      if (err.message.includes('401') || err.message.includes('비밀번호')) {
+      if (err.message.indexOf('비밀번호') !== -1 || err.message.indexOf('401') !== -1) {
         sessionStorage.removeItem(SESSION_KEY);
         password = '';
-        showLogin();
-        loginError.textContent = err.message;
-        loginError.hidden = false;
+        showLogin(err.message);
+        return;
       }
+
+      adminAlertText.textContent = err.message || '상담 목록을 불러오지 못했습니다.';
+      adminAlert.removeAttribute('hidden');
     }
   }
 
@@ -195,12 +245,11 @@
 
   loginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    loginError.hidden = true;
-    password = adminPasswordInput.value.trim();
+    hideLoginError();
 
-    if (!password) {
-      loginError.textContent = '비밀번호를 입력해 주세요.';
-      loginError.hidden = false;
+    const inputPassword = adminPasswordInput.value.trim();
+    if (!inputPassword) {
+      showLoginError('비밀번호를 입력해 주세요.');
       return;
     }
 
@@ -211,17 +260,15 @@
     }
 
     try {
-      const data = await apiRequest('GET');
+      await verifyPassword(inputPassword);
+      password = inputPassword;
       sessionStorage.setItem(SESSION_KEY, password);
       adminPasswordInput.value = '';
       showApp();
-      if (data.warning) {
-        window.alert(data.warning);
-      }
     } catch (err) {
       password = '';
-      loginError.textContent = err.message || '로그인에 실패했습니다. Netlify에 설정한 ADMIN_PASSWORD와 동일한지 확인해 주세요.';
-      loginError.hidden = false;
+      sessionStorage.removeItem(SESSION_KEY);
+      showLoginError(err.message || '로그인에 실패했습니다.');
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -236,6 +283,7 @@
     consultations = [];
     lastUnread = 0;
     initialLoad = true;
+    hideLoginError();
     showLogin();
   });
 
@@ -251,7 +299,7 @@
   });
 
   adminAlertClose.addEventListener('click', function () {
-    adminAlert.hidden = true;
+    adminAlert.setAttribute('hidden', '');
   });
 
   adminList.addEventListener('click', function (e) {
@@ -275,9 +323,21 @@
     });
   });
 
-  if (password) {
-    showApp();
-  } else {
+  async function init() {
     showLogin();
+    const saved = sessionStorage.getItem(SESSION_KEY);
+    if (!saved) return;
+
+    try {
+      await verifyPassword(saved);
+      password = saved;
+      showApp();
+    } catch (err) {
+      sessionStorage.removeItem(SESSION_KEY);
+      password = '';
+      showLogin('이전 로그인 정보가 만료되었습니다. Netlify에 설정한 비밀번호로 다시 로그인해 주세요.');
+    }
   }
+
+  init();
 })();
